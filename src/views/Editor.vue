@@ -210,7 +210,8 @@ export default {
       quill.setSelection(length + 1)
     },
     onEditorBlur (quill) {
-      // console.log('editor blur!', quill)
+      console.log('editor blur!', quill)
+      this.confirmText('auto-save')
     },
     onEditorFocus (quill) {
       // console.log('editor focus!', quill)
@@ -375,7 +376,10 @@ export default {
       setTimeout(() => {
         this.formatContentNode()
       }, 200)
-      this.$emit('confirmEditorRichText', this.content)
+      this.$emit('confirmEditorRichText', {
+        content: this.content,
+        isAutoSave: params === 'auto-save'
+      })
     },
     cancel: function (params) {
       this.result = ''

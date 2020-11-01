@@ -80,7 +80,7 @@
       </el-row>
     </el-form>    
   </b-card>
-
+  <p v-if="isAutoSaved">已于{{autoSaveTime}}自动保存</p>
   <Editor 
   v-loading="processLoading"
   v-if="!articleUuid || (articleUuid && form.content)"
@@ -100,9 +100,10 @@
 <script>
 import Editor from './Editor'
 import categoryConfig from '../config/category'
-
+import AutoSaveMixins from '@/mixins/autoSave'
 export default {
   name: 'dashboard',
+  mixins: [AutoSaveMixins],
   components: {
     Editor
   },
@@ -183,8 +184,20 @@ export default {
       this.uploadHeaderImageData.identifier = this.form.title.replace(/\s+/g, '')
     },
     confirmText (data) {
-      this.$set(this.form, 'content', data)
+      this.$set(this.form, 'content', data.content)
       // this.form.content = data
+      this.$nextTick().then(() => {
+        if (data.isAutoSave) {
+          this.isAutoSaving = true
+          this.postAutoSave(() => {
+            this.beforeConfirmPost()
+            console.log('auto save')
+          })
+        } else {
+          this.isAutoSaving = false
+        }
+      })
+
       console.log(this.form)
     },
     handleHeaderSuccess (res, file) {
@@ -258,6 +271,7 @@ export default {
         .then(res => {
           this.processLoading = false
           this.editStatus = 'edited'
+          if (this.isAutoSaving) return
           this.$alert('你已成功修改', '成功', {
             confirmButtonText: '跳转查看',
             cancelButtonText: '继续修改',
@@ -300,16 +314,17 @@ export default {
       // console.log(this.form)
       this.Http.Post('sun-create/article-admin/', {}, this.form)
         .then(res => {
+          this.processLoading = false
+          this.articleUuid = res.uuid
+          this.form = res
+          this.editStatus = 'editing'
+          if (this.isAutoSaving) return
           this.$notify({
             title: '成功',
             message: '你已成功保存.',
             type: 'success'
           })
-          this.processLoading = false
           console.log(res)
-          this.articleUuid = res.uuid
-          this.form = res
-          this.editStatus = 'editing'
         })
         .catch(err => {
           this.processLoading = false
