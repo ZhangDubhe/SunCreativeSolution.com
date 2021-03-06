@@ -65,6 +65,7 @@ export default {
     async fetchFolders() {
       let res = await this.Http.Get('sun-create/media-folders/')
       this.folders = res
+      this.$store.commit('SET_MEDIA_FOLDERS', res)
     },
     handleDbClick() {
       this.editing = true

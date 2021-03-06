@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Folders from './Folders.vue'
 import mediaItem from './mediaItem.vue'
 import UploadDialog from './UploadDialog.vue'
@@ -56,12 +57,19 @@ export default {
       selectedFolder: null
     }
   },
+  computed: {
+    ...mapState(['mediaUpdateCount'])
+  },
+  watch: {
+    mediaUpdateCount() {
+      this.handleSuccess()
+    }
+  },
   mounted() {
     this.fetchMedias()
   },
   methods: {
     sizeChange(v) {
-      console.log(v)
       this.params.size = v
       this.fetchMedias()
     },
@@ -113,7 +121,6 @@ h1, h2, h3, h4, h5 {
   margin: 0;
 }
 .media-page {
-  height: calc(100vh - 62px);
   max-width: 1080px;
   margin: auto;
   .list-view {

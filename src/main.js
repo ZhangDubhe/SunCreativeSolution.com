@@ -9,6 +9,7 @@ import VueScroll from 'vue-scroll'
 import Http from './utils/request'
 import utils from './utils/utils'
 import Loading from './directive/loading'
+import store from './store'
 
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -37,6 +38,7 @@ router.beforeEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: {
     App
