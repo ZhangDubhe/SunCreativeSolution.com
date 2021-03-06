@@ -24,11 +24,15 @@
       </div>
     </template>
     <hr/>
-    <div>
+    <div v-if="!editVisible">
       <strong>{{media.name}}</strong>
-      <p class="path">{{media.oss_path}}</p>
-      <el-tag size="mini">{{media.type}}</el-tag>
+      <el-button @click="startEdit" type="text" icon="el-icon-edit" size="mini"></el-button>
     </div>
+    <div v-else class="input-wrapper">
+      <el-input size="mini" v-model="media.name"></el-input>
+    </div>
+    <el-tag size="mini" v-if="media.folder" class="path">{{media.folder.name}}</el-tag>
+    <el-tag size="mini" type="warning">{{media.type}}</el-tag>
   </div>
 </template>
 
@@ -37,6 +41,16 @@ export default {
   name: 'MediaItem',
   props: {
     media: Object
+  },
+  data() {
+    return {
+      editVisible: false
+    }
+  },
+  methods: {
+    startEdit() {
+      this.editVisible = true
+    }
   }
 }
 </script>
@@ -45,8 +59,14 @@ export default {
 $size: 140px;
 .media-item {
   width: $size;
+  padding: 8px 0;
   p {
     margin: 0;
+  }
+  .input-wrapper {
+    .el-input {
+      margin: 0;
+    }
   }
   .media-entity {
     width: $size;

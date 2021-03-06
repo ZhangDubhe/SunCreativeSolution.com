@@ -13,8 +13,8 @@
       <el-form-item label="素材名">
         <el-input v-model="uploadFile.identifier" />
       </el-form-item>
-      <el-form-item label="文件夹">
-        <el-input v-model="uploadFile.file_folder" />
+      <el-form-item label="上传至">
+        <el-input disabled v-model="uploadFile.folder_name" />
       </el-form-item>
     </el-form>
 
@@ -44,11 +44,27 @@ export default {
     visible: {
       type: Boolean,
       default: false,
+    },
+    folder: {
+      type: Object
     }
   },
   watch: {
     selectType(to) {
       this.uploadFile.type = to
+    },
+    folder: {
+      deep: true,
+      handler(to) {
+        if (to) {
+          const {id, name} = to
+          this.uploadFile.folder_id = id
+          this.uploadFile.folder_name = name
+        } else {
+          delete this.uploadFile.folder_id
+          this.uploadFile.folder_name = 'default'
+        }
+      }
     }
   },
   data() {

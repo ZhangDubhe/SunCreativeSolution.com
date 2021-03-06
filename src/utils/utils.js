@@ -310,7 +310,8 @@ const loadImage = function (imgUrl) {
     // let set = setInterval(check, 1000)
   })
 }
-module.exports = {
+
+export default {
   formatNumber: formatNumber,
   formatProject: formatProject,
   loadImage: loadImage,

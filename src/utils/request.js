@@ -5,8 +5,8 @@ import {
 } from 'element-ui'
 Vue.prototype.$http = axios
 
-const baseUrl = 'https://api.dubheee.cn/' // API_URL_PREFIX
-// const baseUrl = 'http://localhost:8000/' // API_URL_PREFIX
+// const baseUrl = 'https://api.dubheee.cn/' // API_URL_PREFIX
+const baseUrl = 'http://localhost:8000/' // API_URL_PREFIX
 const showErr = function (err) {
   try {
     Message.error({
@@ -41,7 +41,7 @@ axios.interceptors.response.use(data => {
   }
   return data
 }, err => {
-  // console.error('[+] HandleErr: ', err)
+  console.error('[+] HandleErr: ', err)
   showErr(err)
   // if (err.response.status === 504 || err.response.status === 404) {
   //   showErr('服务器被吃了⊙﹏⊙∥')

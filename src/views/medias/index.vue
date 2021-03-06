@@ -9,9 +9,10 @@
       </div>
     </header>
 
+    <Folders ref="folder" @change="handleFolderChange"/>
     <section class="list-view">
       <el-row :gutter="20">
-        <el-col :span="4" v-for="(item, index) in medias" :key="index">
+        <el-col :span="6" v-for="(item, index) in medias" :key="index">
           <media-item :media="item" />
         </el-col>
       </el-row>
@@ -30,15 +31,17 @@
 
     <upload-dialog
     :visible.sync="isShowUploadDialog"
+    :folder="selectedFolder"
     @success="handleSuccess"/>
   </div>
 </template>
 
 <script>
+import Folders from './Folders.vue'
 import mediaItem from './mediaItem.vue'
 import UploadDialog from './UploadDialog.vue'
 export default {
-  components: { mediaItem, UploadDialog },
+  components: { mediaItem, UploadDialog, Folders },
   name: 'MediaLibrary',
   data() {
     return {
@@ -49,7 +52,8 @@ export default {
       },
       total: 0,
       medias: [],
-      isShowUploadDialog: false
+      isShowUploadDialog: false,
+      selectedFolder: null
     }
   },
   mounted() {
@@ -62,13 +66,35 @@ export default {
       this.fetchMedias()
     },
     fetchMedias() {
-      this.Http.Get('sun-create/medias/', {
-        ...this.params
-      }).then((res) => {
+      let query = {
+        ...this.params,
+      }
+      if (this.selectedFolder) {
+        query.folder = this.selectedFolder.id
+      }
+      this.Http.Get('sun-create/medias/', query).then((res) => {
         const {list, total} = res
         this.total = total
         this.medias = list
       })
+    },
+    handleFolderChange(item) {
+      if (!item) {
+        this.$router.push({
+          path: this.$route.path,
+        })
+        this.selectedFolder = null
+        this.fetchMedias()
+        return
+      }
+      this.$router.push({
+        path: this.$route.path,
+        query: {
+          folder_id: item.id
+        }
+      })
+      this.selectedFolder = item
+      this.fetchMedias()
     },
     showUpload() {
       this.isShowUploadDialog = true
@@ -76,6 +102,7 @@ export default {
     handleSuccess() {
       this.isShowUploadDialog = false
       this.fetchMedias()
+      this.$refs.folder.fetchFolders()
     }
   }
 }

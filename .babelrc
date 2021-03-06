@@ -3,12 +3,18 @@
     ["env", { "modules": false }],
     "stage-2"
   ],
-  "plugins": [["component", [
-    {
-      "libraryName": "element-ui",
-      "styleLibraryName": "theme-chalk"
-    }
-  ]]],
+  "plugins": [
+    ["transform-runtime", {
+      "regenerator": true
+    }],
+    ["transform-async-to-generator"],
+    ["component", [
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
+      }
+    ]]
+  ],
   "comments": false,
   "env": {
     "test": {
