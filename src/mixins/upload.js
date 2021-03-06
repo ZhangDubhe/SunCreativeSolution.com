@@ -6,8 +6,7 @@ export default Vue.mixin({
       uploadFile: {
         identifier: '',
         type: 'image',
-        file_type: 'sun/medias',
-        file_folder: ''
+        folder_name: 'default'
       },
       processLoading: false,
       uploadHeader: {
@@ -20,10 +19,6 @@ export default Vue.mixin({
     handleBeforeUpdate(file) {
       if (!this.uploadFile.identifier) {
         this.$message.error('请输入素材名称')
-        return false
-      }
-      if (!this.uploadFile.file_folder) {
-        this.$message.error('请输入素材文件夹')
         return false
       }
     },
