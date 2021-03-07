@@ -5,8 +5,8 @@ import {
 } from 'element-ui'
 Vue.prototype.$http = axios
 
-const baseUrl = 'https://api.dubheee.cn/' // API_URL_PREFIX
-// const baseUrl = 'http://localhost:8000/' // API_URL_PREFIX
+// const baseUrl = 'https://api.dubheee.cn/' // API_URL_PREFIX
+const baseUrl = 'http://localhost:8000/' // API_URL_PREFIX
 const showErr = function (err) {
   try {
     Message.error({

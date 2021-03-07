@@ -69,31 +69,10 @@
     </el-main>
     <el-main v-if="viewType === 'thumbnail'" v-loading="recordListLoading">
       <isotope v-if="articleList && articleList.length" ref="cpt" :options="getOptions()" :list="articleList">
-        <div v-for="(item,index) in articleList"
+        <div v-for="(item, index) in articleList"
         :key="item.uuid"
         class="grid-item grid-sizer">
-          <el-card :body-style="{ padding: '0px' }"
-          style="margin-bottom: 10px;min-height: 306px">
-            <img :src="item.thumbnail + '?x-oss-process=style/400wh'" class="image thumbnail">
-            <div style="border-top: 10px solid"
-            :style="{ padding: '14px', borderColor: item.theme_color }">
-              <span>{{index+1}}. {{item.title}}</span>
-              <p class="text-overflow">{{item.explanation}}</p>
-
-              <p class="d-flex">
-                <time class="time mr-auto">{{ item.date }}</time>
-                <el-tag size="small" v-if="item.category === 'art'">art</el-tag>
-                <el-tag size="small" v-else-if="item.category === 'research'" type="success">research</el-tag>
-                <el-tag size="small" v-else-if="item.category === 'commercial'" type="danger">commercial</el-tag>
-                <el-tag size="small" v-else type="info">{{item.category}}</el-tag>
-              </p>                
-              <div class="bottom clearfix d-flex">
-                <el-button @click="handleClick(item)" type="text" size="small">查看</el-button>
-                <el-button class="ml-auto" @click="handleClickEdit(item)" type="text" size="small">编辑</el-button>
-                <el-button @click="showDeleteConfirm(item.uuid)" type="text" style="color: #F56C6C" size="small">删除</el-button>
-              </div>
-            </div>
-          </el-card>
+          <article-item :item="item" :index="index" />
         </div>
       </isotope>
       <!-- <section class="container masonry-arr">
@@ -106,11 +85,13 @@
 <script>
 import categoryConfig from '../config/category'
 import isotope from 'vueisotope'
+import ArticleItem from './articles/Item.vue'
 
 export default {
   name: 'PostRecord',
   components: {
-    isotope
+    isotope,
+    ArticleItem
   },
   data: function () {
     return {
@@ -187,7 +168,9 @@ export default {
     },
     loadArtcleList: function (params) {
       this.recordListLoading = true
-      this.Http.Get('sun-create/article-admin/').then(res => {
+      this.Http.Get('sun-create/article-admin/', {
+        state: 1
+      }).then(res => {
         window.localStorage.setItem('articles_length', res.length)
         this.recordListLoading = false
         this.articleList = res.map(item => {
@@ -199,10 +182,11 @@ export default {
         })
         this.saveArticleList = this.articleList
       }, err => {
+        this.recordListLoading = false
         console.error('GETADMIN', err)
-        this.$router.push({
-          name: 'LoginPage'
-        })
+        // this.$router.push({
+        //   name: 'LoginPage'
+        // })
       })
     },
     handleClick (row) {
