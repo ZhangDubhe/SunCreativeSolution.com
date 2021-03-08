@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <AdminHeader/>
+    <!-- <AdminHeader/> -->
     <div class="app-body admin-body">
       <Sidebar class="admin-sidebar" :navItems="nav"/>
       <main class="main">
@@ -20,15 +20,15 @@
   overflow: hidden;
 }
 .app-body.admin-body{
-  margin-top: 62px;
+  margin-top: 0;
 }
 .sidebar-fixed .admin-body .sidebar {
-  height: calc(100vh - 62px);
+  height: 100vh;
 }
 </style>
 
 <script>
-import nav from '../_nav'
+import nav from './_adminNav'
 import AdminHeader from '../components/AdminHeader'
 import { Sidebar, Aside as AppAside } from '../components/'
 

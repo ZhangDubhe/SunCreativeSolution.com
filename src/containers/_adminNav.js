@@ -1,19 +1,28 @@
+import { ArticleStateList } from '@/config/article'
+const ArticleNavs = ArticleStateList.map((c) => {
+  const { label: name, key } = c
+  let _key = key.toLowerCase()
+  return {
+    name,
+    url: `/admin/${_key}`,
+    icon: 'icon-magic-wand'
+  }
+})
 export default {
   items: [
     {
-      name: 'PostRecord',
-      url: '/admin/articles',
-      icon: 'icon-book-open'
+      name: 'Welcome, Sun',
+      url: 'dashboard',
+      icon: 'icon-layers'
     },
+    ...ArticleNavs,
     {
-      name: 'Post',
-      url: '/admin/post',
-      icon: 'icon-paper-plane'
+      divider: true
     },
     {
       name: '媒体库',
       url: '/admin/medias',
-      icon: 'icon-magic-wand'
+      icon: 'icon-folder'
     }
     // {
     //   name: 'Dashboard',

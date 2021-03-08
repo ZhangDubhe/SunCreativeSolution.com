@@ -17,7 +17,6 @@
 
 <script>
 import bus from '@/router/bus'
-import nav from '../_nav'
 import { Header as AppHeader, Sidebar, Aside as AppAside } from '../components/'
 
 export default {
@@ -29,7 +28,6 @@ export default {
   },
   data () {
     return {
-      nav: nav.items,
       previousTop: 0,
       position: {},
       headerActive: true

@@ -1,23 +1,20 @@
 <template>
   <div class="page-dashboard animated fadeIn">
-    <div class="three" id="threeExample" ref="threeExample" @click="clickSimpleLine()" >
-    <h5 v-if="welcome" style="margin-bottom: 0px;top: 3rem;position: relative;height: 0;">{{ welcome[hourIndex] }}</h5>
+    <h5 v-if="welcome" class="my-4">{{ welcome[hourIndex] }}</h5>
+    <video ref="catVideo" class="dash-video" src="https://static.dubheee.cn/sun/medias/cat/haq.mp4" @load="handleLoad" loop/>
+
+    <div @click="startEdit" class="text-center">
+      <logo class="mx-auto" topBg="black" bottomBg="white"/>
     </div>
   </div>
 </template>
 
 <script>
-// if (WEBGL.isWebGLAvailable()) {
-//     // Initiate function or other initializations here
-//     animate()
-// } else {
-//     var warning = WEBGL.getWebGLErrorMessage()
-//     document.getElementById('container').appendChild(warning)
-// }
-import * as THREE from 'three'
 import bus from '@/router/bus'
+import Logo from '../components/Logo.vue'
 
 export default {
+  components: { Logo },
   name: 'dashboard',
   data () {
     return {
@@ -28,15 +25,12 @@ export default {
       welcome: [
         'Good Morning! Have breakfast?',
         'Good Afternoon! Have Lunch?',
-        'Good Evening Dubhe~',
+        'Good Evening! Sun~',
         '还不睡觉, 干啥呢'
       ]
     }
   },
   mounted () {
-    console.log('hhhh')
-    this.drawSimpleLine()
-
     if (this.hour < 12 && this.hour >= 6) {
       this.hourIndex = 0
     } else if (this.hour < 18 && this.hour >= 12) {
@@ -46,46 +40,20 @@ export default {
     } else if (this.hour < 6) {
       this.hourIndex = 3
     }
+    this.handleLoad()
   },
   methods: {
     clickSimpleLine () {
       console.log(window.scrollY)
       bus.$emit('home-go-down', true)
     },
-    drawSimpleLine () {
-      var renderer = new THREE.WebGLRenderer()
-      let threeExample = document.querySelector('#threeExample')
-      this.windowWith = window.innerWidth
-      this.windowHinnerHeight = window.innerHeight
-      // 定义某个小模块为容器
-      this.container = {
-        width: this.windowWith,
-        height: this.windowHinnerHeight
-      }
-      console.log('某个小模块的获取方式', this.$refs.threeExample, threeExample)
-      renderer.setSize(this.container.width, this.container.height)
-
-      threeExample.appendChild(renderer.domElement)
-
-      var camera = new THREE.PerspectiveCamera(45, this.container.width / this.container.height, 1, 500)
-      camera.position.set(0, 0, 100)
-      camera.lookAt(0, 0, 0)
-
-      const scene = new THREE.Scene()
-      console.log(scene)
-
-      // create a blue LineBasicMaterial
-      var material = new THREE.LineBasicMaterial({ color: 0x0000ff })
-
-      var geometry = new THREE.Geometry()
-      geometry.vertices.push(new THREE.Vector3(-10, 0, 0))
-      geometry.vertices.push(new THREE.Vector3(0, -10, 0))
-      geometry.vertices.push(new THREE.Vector3(10, 0, 0))
-
-      var line = new THREE.Line(geometry, material)
-
-      scene.add(line)
-      renderer.render(scene, camera)
+    handleLoad() {
+      this.$refs.catVideo.play()
+    },
+    startEdit() {
+      this.$router.push({
+        name: 'Post'
+      })
     }
   }
 }
@@ -93,15 +61,14 @@ export default {
 
 <style>
 .page-dashboard {
-  color: white;
-  height: 100vh;
+  color: #000;
+  width: 720px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.page-dashboard h3 {
-  display: block;
+
+.dash-video {
+  width: 100%;
 }
-.page-dashboard .three {
-  display: block;
-  padding: 0!important;
-  cursor: url(https://static.dubheee.cn/sun/static/cursor_pointer.png),pointer;
-}
+
 </style>

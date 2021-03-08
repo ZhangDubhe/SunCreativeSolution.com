@@ -1,25 +1,29 @@
 <template>
   <el-container class="page-post-record pt-2">
-    <el-header class="d-flex">
-      <h5>Articles History</h5>
-      <el-select
-      class="ml-2"
-      v-model="viewCategory" 
-      @change="changeSelectCategory"
-      clearable
-      size="small"
-      placeholder="请选择类型">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <section class="ml-auto">
-        <i class="manage-icon el-icon-menu" :class="[{'active': viewType === 'thumbnail'}]"  @click="handleViewChange('thumbnail')"></i>
-        <i class="manage-icon el-icon-tickets" :class="[{'active': viewType === 'list'}]" @click="handleViewChange('list')"></i>
-      </section>
+    <el-header class="mt-2">
+      <h3 class="d-flex">{{pageTitle}}</h3>
+      <div class="d-flex">
+
+      </div>
+      <div class="d-flex">
+        <el-select
+        v-model="viewCategory" 
+        @change="changeSelectCategory"
+        clearable
+        size="small"
+        placeholder="请选择类型">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <section class="ml-auto">
+          <i class="manage-icon el-icon-menu" :class="[{'active': viewType === 'thumbnail'}]"  @click="handleViewChange('thumbnail')"></i>
+          <i class="manage-icon el-icon-tickets" :class="[{'active': viewType === 'list'}]" @click="handleViewChange('list')"></i>
+        </section>
+      </div>
     </el-header>
     <el-main v-if="viewType === 'list'" v-loading="recordListLoading">
       <el-table
@@ -83,7 +87,9 @@
   </el-container>
 </template>
 <script>
-import categoryConfig from '../config/category'
+import { mapState } from 'vuex'
+import categoryConfig from '@/config/category'
+import { ArticleStateDesc } from '@/config/article'
 import isotope from 'vueisotope'
 import ArticleItem from './articles/Item.vue'
 
@@ -92,6 +98,9 @@ export default {
   components: {
     isotope,
     ArticleItem
+  },
+  props: {
+    pageState: Number
   },
   data: function () {
     return {
@@ -115,6 +124,22 @@ export default {
   mounted () {
     this.loadCategoryConfig()
     this.loadArtcleList()
+  },
+  computed: {
+    ...mapState(['articleUpdateCount']),
+    pageTitle() {
+      return ArticleStateDesc[this.pageState]
+    }
+  },
+  watch: {
+    pageState(val) {
+      let pState = val || 3
+      this.$store.commit('SET_PAGE_STATE', pState)
+      this.loadArtcleList()
+    },
+    articleUpdateCount() {
+      this.loadArtcleList()
+    }
   },
   methods: {
     getOptions () {
@@ -169,7 +194,7 @@ export default {
     loadArtcleList: function (params) {
       this.recordListLoading = true
       this.Http.Get('sun-create/article-admin/', {
-        state: 1
+        state: this.pageState
       }).then(res => {
         window.localStorage.setItem('articles_length', res.length)
         this.recordListLoading = false
@@ -204,34 +229,6 @@ export default {
         params: {
           uuid: row.uuid
         }
-      })
-    },
-    handleClickDelete (uuid) {
-      this.recordListLoading = true
-      this.Http.Delete(`sun-create/article-admin/${uuid}/`, {}).then(res => {
-        this.recordListLoading = false
-        this.$notify({
-          title: '成功',
-          message: '你已成功删除.',
-          type: 'success'
-        })
-        this.loadArtcleList()
-      }).catch(_ => {
-        this.recordListLoading = false
-      })
-    },
-    showDeleteConfirm (uuid) {
-      this.$confirm('此操作将永久删除该页面, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.handleClickDelete(uuid)
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
     },
     handlePostNewArticle: function (params) {

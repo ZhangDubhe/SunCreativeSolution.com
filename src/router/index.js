@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import { ArticleState } from '@/config/article'
 // Containers
 import Full from '@/containers/Full'
 import Admin from '@/containers/Admin'
@@ -55,7 +56,40 @@ export default new Router({
         {
           path: 'articles',
           name: 'PostRecord',
-          component: PostRecord
+          component: PostRecord,
+          redirect: 'board'
+        },
+        {
+          path: 'craft',
+          name: 'Craft',
+          component: PostRecord,
+          props: {
+            pageState: ArticleState.CRAFT
+          }
+        },
+        {
+          path: 'trash',
+          name: 'Trash',
+          component: PostRecord,
+          props: {
+            pageState: ArticleState.TRASH
+          }
+        },
+        {
+          path: 'board',
+          name: 'OnBoard',
+          component: PostRecord,
+          props: {
+            pageState: ArticleState.BOARD
+          }
+        },
+        {
+          path: 'black',
+          name: 'BlackHistory',
+          component: PostRecord,
+          props: {
+            pageState: ArticleState.BLACK
+          }
         },
         {
           path: 'editor',

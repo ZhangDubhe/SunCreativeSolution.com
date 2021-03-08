@@ -24,7 +24,7 @@
       size="small"
       @keyup.enter.native="postFolder"
     >
-      <el-button slot="append" @click="postFolder" icon="el-icon-plus"></el-button>
+      <el-button slot="append" @click="postFolder">new</el-button>
     </el-input>
     <el-button v-else class="button-new-tag" size="small" 
     @click="showCreate">+ New Folder</el-button>
@@ -72,6 +72,7 @@ export default {
     },
     endEdit() {
       this.editing = false
+      this.isShowCreate = false
       this.folders.forEach((e) => {
         delete e.editing
       })
@@ -124,7 +125,8 @@ export default {
   display: flex;
   flex-flow: row wrap;
   .tag + .tag,
-  .el-tag + .el-tag {
+  .el-tag + .el-tag,
+  .el-input + .el-button {
     margin-left: 10px;
   }
   .button-new-tag {

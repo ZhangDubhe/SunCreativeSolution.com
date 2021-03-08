@@ -1,4 +1,11 @@
 export const ArticleState = {
+  BOARD: 3, // "展示板"
+
+  CRAFT: 1, // "草稿夹"
+  TRASH: 2, // "回收站"
+  BLACK: 4 // "黑历史"
+}
+export const StateIcon = {
   CRAFT: 1, // "草稿夹"
   TRASH: 2, // "回收站"
   BOARD: 3, // "展示板"
